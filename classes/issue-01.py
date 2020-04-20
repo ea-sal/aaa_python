@@ -4,9 +4,10 @@ from keyword import iskeyword
 
 class ColorizeMixin:
     """defines color of text output"""
+    @property
     def get_color(self):
         repr_color_code = 33
-        return repr_color_code
+        return f'\033[1;{repr_color_code};40m'
 
 
 class MakeAttributes:
@@ -19,24 +20,13 @@ class Advert(ColorizeMixin, MakeAttributes):
     """creates class instance from JSON attrs"""
     def __init__(self, dictionary):
         self.price = 0
-        self = MakeAttributes(dictionary)
+        super().__init__(dictionary)
+
         assert self.price >= 0
 
-
     def __repr__(self):
-        return f'\033[1;{ColorizeMixin().get_color()};;47m {self.title} | {self.price} ₽'
+        return f'{ColorizeMixin().__repr__()} {self.title} | {self.price} ₽'
 
-
-"""
-    @property
-    def price_check(self):
-        return self.price
-
-    @price_check.setter
-    def price_check(self, new_price):
-        assert new_price >= 0
-        self.price = new_price
-"""
 
 lesson_str = """{
     "title": "python",
@@ -48,7 +38,7 @@ lesson_str = """{
     }"""
 lesson = json.loads(lesson_str)
 lesson_ad = Advert(lesson)
-print('\nOUT: ', lesson_ad.__dict__)
+#print('\nOUT: ', lesson_ad.__dict__)
 
 
 doggo_str = """{
@@ -60,5 +50,5 @@ doggo_str = """{
   }
 } """
 doggo = json.loads(doggo_str)
-#doggo_ad = Advert(doggo)
-#print('\nOUT: ', doggo_ad.__dict__)
+doggo_ad = Advert(doggo)
+print(doggo_ad)
